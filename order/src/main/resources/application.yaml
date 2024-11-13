@@ -1,0 +1,10 @@
+# DataSource Config
+spring:
+  application:
+    name: singularity
+  datasource:
+    # mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/shopping?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true

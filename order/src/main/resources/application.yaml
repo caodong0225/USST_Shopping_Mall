@@ -8,3 +8,11 @@ spring:
     username: root
     password: 123456
     url: jdbc:mysql://localhost:3306/shopping?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+server:
+  port: 8081

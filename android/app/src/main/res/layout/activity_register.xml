@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".login.LoginActivity"
+        tools:context=".register.RegisterActivity"
         tools:layout_editor_absoluteY="25dp">
 
         <ImageView
@@ -48,7 +48,33 @@
                 android:inputType="textPersonName"
                 android:importantForAutofill="yes"
                 android:autofillHints="username"
-                android:hint="@string/username" />
+                android:hint="@string/register_username" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/nickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/username"
+            app:layout_constraintWidth_max="280dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/nickname_editext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:inputType="textPersonName"
+                android:importantForAutofill="yes"
+                android:autofillHints="register_nickname"
+                android:hint="@string/nickname" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -62,7 +88,7 @@
             android:ems="10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username"
+            app:layout_constraintTop_toBottomOf="@+id/nickname"
             app:layout_constraintWidth_max="280dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -72,8 +98,8 @@
                 android:singleLine="true"
                 android:inputType="textPassword"
                 android:importantForAutofill="yes"
-                android:autofillHints="password"
-                android:hint="@string/password" />
+                android:autofillHints="register_nickname"
+                android:hint="@string/register_password" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,26 +112,13 @@
             android:layout_marginEnd="8dp"
             android:backgroundTint="@color/colorPrimaryDark"
             android:textColor="@android:color/white"
-            android:text="@string/login"
+            android:text="@string/register_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/password"
             app:layout_constraintWidth_max="280dp" />
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/register_page"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/register_page"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:textColor="@android:color/white"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

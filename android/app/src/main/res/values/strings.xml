@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">shopping</string>
+    <string name="app_name">购物商城</string>
     <string name="navigation_drawer_open">打开导航栏</string>
     <string name="navigation_drawer_close">关闭导航栏</string>
     <string name="nav_header_title">购物商城</string>
@@ -15,4 +15,9 @@
     <string name="register_page">注册</string>
     <string name="shopping_logo">购物商城</string>
     <string name="menu_users">用户管理</string>
+    <string name="register_username">用户名</string>
+    <string name="register_password">密码</string>
+    <string name="nickname">昵称</string>
+    <string name="register_confirm">注册</string>
+
 </resources>

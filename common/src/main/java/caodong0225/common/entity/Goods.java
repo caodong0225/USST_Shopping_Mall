@@ -1,6 +1,5 @@
 package caodong0225.common.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +18,12 @@ public class Goods implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 主键ID
+     */
+    @Schema(description = "主键ID", example = "1")
+    private Integer id;
+
+    /**
      * 商品名称
      */
     @Schema(description = "商品名称", example = "拖鞋")
@@ -28,7 +33,7 @@ public class Goods implements Serializable {
      * 商品状态
      */
     @Schema(description = "商品状态 1正在售卖 2已卖光 3已下架", example = "1")
-    private int status;
+    private Integer status;
 
     /**
      * 商品价格
@@ -45,7 +50,6 @@ public class Goods implements Serializable {
     /**
      * 商品库存
      */
-    @JsonIgnore
     @Schema(description = "商品库存", example = "100")
-    private int stock;
+    private Integer stock;
 }

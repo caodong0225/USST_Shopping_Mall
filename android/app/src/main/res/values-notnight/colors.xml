@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3867d6</color>
-    <color name="colorNavPrimary">#FFFFFF</color>
+    <color name="colorNavPrimary">#000000</color>
     <color name="colorPrimaryDark">#3867d6</color>
     <color name="colorAccent">#1c49b4</color>
-    <color name="icons">#797979</color>
+    <color name="icons">#434343</color>
     <color name="swipeBackground">#E74C3C</color>
     <color name="swipeIcon">#FFFFFF</color>
     <color name="hyperLink">#FF7F50</color>
-    <color name="purple_500">#6200EE</color>
-    <color name="purple_700">#3700B3</color>
-    <color name="white">#FFFFFF</color>
-    <color name="teal_200">#03DAC5</color>
-    <color name="teal_700">#018786</color>
-    <color name="black">#000000</color>
 </resources>

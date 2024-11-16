@@ -10,13 +10,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.caodong0225.shopping.R
 import com.caodong0225.shopping.databinding.FragmentUsersBinding
+import com.caodong0225.shopping.model.ApiResponse
+import com.caodong0225.shopping.model.UsersRequest
+import com.caodong0225.shopping.repository.UsersRepository
 import com.caodong0225.shopping.ui.register.RegisterActivity
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class UsersFragment : Fragment() {
 
     private var _binding: FragmentUsersBinding? = null
     private val binding get() = _binding!!
+    private val usersRepository = UsersRepository()  // 实例化 AuthRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +45,18 @@ class UsersFragment : Fragment() {
         loginButton?.setOnClickListener {
             val username = usernameEditText?.text.toString()
             val password = passwordEditText?.text.toString()
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = usersRepository.fetchJwtToken(UsersRequest(username, password))
+                if (response?.data != null) {
+                    // 登录成功
+                    Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
+                } else {
+                    // 登录失败
+                    Toast.makeText(context, response?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
             Toast.makeText(context, "用户名: $username\n密码: $password", Toast.LENGTH_SHORT).show()
         }
 

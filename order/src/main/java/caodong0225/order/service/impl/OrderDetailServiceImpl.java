@@ -18,4 +18,9 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     public List<OrderDetail> getOrderDetailByOrderId(Integer orderId) {
         return this.lambdaQuery().eq(OrderDetail::getOrderId, orderId).list();
     }
+
+    @Override
+    public boolean insertOrderDetail(OrderDetail orderDetail) {
+        return this.save(orderDetail);
+    }
 }

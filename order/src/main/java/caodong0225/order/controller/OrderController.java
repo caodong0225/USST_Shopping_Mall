@@ -1,9 +1,13 @@
 package caodong0225.order.controller;
 
+import caodong0225.common.dto.CreateOrderDTO;
 import caodong0225.common.entity.Goods;
 import caodong0225.common.entity.OrderDetail;
 import caodong0225.common.entity.Orders;
 import caodong0225.common.entity.UserInfo;
+import caodong0225.common.response.BaseDataResponse;
+import caodong0225.common.response.BaseResponse;
+import caodong0225.common.response.GeneralDataResponse;
 import caodong0225.common.util.JwtUtil;
 import caodong0225.common.vo.GoodsOrderedVO;
 import caodong0225.common.vo.OrderInfoVO;
@@ -12,14 +16,15 @@ import caodong0225.order.service.IOrderDetailService;
 import caodong0225.order.service.IOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author jyzxc
@@ -35,10 +40,10 @@ public class OrderController {
 
     @GetMapping("/list")
     @Operation(summary = "获取订单列表", description = "获取当前用户所有下单的列表")
-    public ResponseEntity<List<OrderInfoVO>> getOrderList(HttpServletRequest request) {
+    public ResponseEntity<GeneralDataResponse<List<OrderInfoVO>>> getOrderList(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token == null) {
-            return ResponseEntity.status(403).build(); // 返回 403 状态码
+            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(new GeneralDataResponse<>(403, "您还未登录"));
         }
         UserInfo userInfo = JwtUtil.parseToken(token);
         List<Orders> orderList = orderService.getOrdersByUserId(userInfo.getId());
@@ -65,6 +70,44 @@ public class OrderController {
             orderInfoVO.setOrderDetailInfoVOList(goodsOrderedVOList);
             orderInfoList.add(orderInfoVO);
         });
-        return ResponseEntity.ok(orderInfoList);
+        return ResponseEntity.ok(new GeneralDataResponse<>(orderInfoList));
+    }
+
+    @PostMapping("/create")
+    @Operation(summary = "创建订单", description = "创建一个新的订单")
+    public ResponseEntity<BaseResponse> createOrder(
+            HttpServletRequest request,
+            @Valid @RequestBody List<CreateOrderDTO> createOrderDTOList
+    ) {
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(new BaseDataResponse(403, "您还未登录"));
+        }
+        // TODO: 获取订单流水号
+        UserInfo userInfo = JwtUtil.parseToken(token);
+        AtomicReference<Double> totalPrice = new AtomicReference<>(0.0);
+        createOrderDTOList.forEach(createOrderDTO -> {
+            Goods goodsInfo = goodsService.getGoodsById(createOrderDTO.getGoodsId());
+            totalPrice.updateAndGet(v -> v + goodsInfo.getPrice() * createOrderDTO.getNumber());
+        });
+        Orders order = new Orders();
+        order.setUserId(userInfo.getId());
+        order.setAmount(totalPrice.get());
+        order.setStatus(1);
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        createOrderDTOList.forEach(createOrderDTO -> {
+            Goods goodsInfo = goodsService.getGoodsById(createOrderDTO.getGoodsId());
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrderId(order.getId());
+            orderDetail.setGoodsId(goodsInfo.getId());
+            orderDetail.setNum(createOrderDTO.getNumber());
+            orderDetail.setAmount(goodsInfo.getPrice() * createOrderDTO.getNumber());
+            orderDetails.add(orderDetail);
+        });
+        if (orderService.createOrderWithDetails(order, orderDetails)) {
+            return ResponseEntity.ok(new BaseResponse());
+        } else {
+            return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(new BaseDataResponse(500, "创建订单失败"));
+        }
     }
 }

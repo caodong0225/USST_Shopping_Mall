@@ -1,5 +1,6 @@
 package caodong0225.order.service;
 
+import caodong0225.common.entity.OrderDetail;
 import caodong0225.common.entity.Orders;
 
 import java.util.List;
@@ -10,4 +11,6 @@ import java.util.List;
  */
 public interface IOrderService {
     List<Orders> getOrdersByUserId(Integer userId);
+    boolean insertOrder(Orders order);
+    boolean createOrderWithDetails(Orders order, List<OrderDetail> orderDetails);
 }

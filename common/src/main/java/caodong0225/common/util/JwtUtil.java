@@ -1,5 +1,6 @@
 package caodong0225.common.util;
 
+import caodong0225.common.entity.UserInfo;
 import caodong0225.common.entity.Users;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -36,6 +37,15 @@ public class JwtUtil {
             // 如果验证过程出现异常，则认为Token无效或已过期
             return true;
         }
+    }
+
+    public UserInfo parseToken(String token) {
+        Map<String, Object> temp = JWT.require(Algorithm.HMAC256(SECRET_KEY)).build().verify(token).getClaim("user").asMap();
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId((Integer) temp.get("id"));
+        userInfo.setUserName((String) temp.get("username"));
+        userInfo.setNickName((String) temp.get("nickname"));
+        return userInfo;
     }
 
 

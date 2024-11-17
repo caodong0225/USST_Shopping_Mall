@@ -3,6 +3,8 @@ package caodong0225.common.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
  * @author jyzxc
  * @since 2024-11-15
  */
+@Getter
+@Setter
 public class Orders implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

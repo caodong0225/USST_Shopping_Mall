@@ -11,7 +11,8 @@ import java.util.List;
  */
 public interface IGoodsService extends IService<Goods> {
     List<Goods> getAllGoods();
-
+    // 商品剩余库存
     Integer goodsStock(Integer goodsId);
-
+    // 通过商品ID获取商品信息
+    Goods getGoodsById(Integer goodsId);
 }

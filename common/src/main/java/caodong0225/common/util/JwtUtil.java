@@ -39,7 +39,7 @@ public class JwtUtil {
         }
     }
 
-    public UserInfo parseToken(String token) {
+    public static UserInfo parseToken(String token) {
         Map<String, Object> temp = JWT.require(Algorithm.HMAC256(SECRET_KEY)).build().verify(token).getClaim("user").asMap();
         UserInfo userInfo = new UserInfo();
         userInfo.setId((Integer) temp.get("id"));

@@ -34,4 +34,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
                 .count());
     }
 
+    @Override
+    public Goods getGoodsById(Integer goodsId) {
+        return this.getById(goodsId);
+    }
+
+
 }

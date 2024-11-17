@@ -11,7 +11,7 @@ class UsersRepository {
     suspend fun fetchJwtToken(userInfo: UsersRequest): ApiResponse<String>? {
         return withContext(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.instance.usersLogin(userInfo)
+                val response = RetrofitClient.usersService.usersLogin(userInfo)
                 // 这里可以记录响应的信息
                 response
             } catch (e: Exception) {
@@ -24,7 +24,7 @@ class UsersRepository {
     suspend fun registerUser(userInfo: UsersRegisterRequest): ApiResponse<String>? {
         return withContext(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.instance.usersRegister(userInfo)
+                val response = RetrofitClient.usersService.usersRegister(userInfo)
                 // 这里可以记录响应的信息
                 response
             } catch (e: Exception) {

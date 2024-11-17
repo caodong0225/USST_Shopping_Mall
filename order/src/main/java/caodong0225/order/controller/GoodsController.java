@@ -1,6 +1,7 @@
 package caodong0225.order.controller;
 
 import caodong0225.common.entity.Goods;
+import caodong0225.common.response.GeneralDataResponse;
 import caodong0225.common.vo.GoodsInfoVO;
 import caodong0225.order.service.IGoodsService;
 import caodong0225.order.service.IOrderDetailService;
@@ -29,10 +30,10 @@ public class GoodsController {
 
     @GetMapping("/list")
     @Operation(summary = "获取商品列表", description = "获取目前所有已有的商品")
-    public ResponseEntity<List<GoodsInfoVO>> getGoodsList() {
+    public ResponseEntity<GeneralDataResponse<List<GoodsInfoVO>>> getGoodsList() {
         List<Goods> allGoods = goodsService.getAllGoods();
         List<GoodsInfoVO> goodsInfoVOList = new ArrayList<>();
         allGoods.forEach(goods -> goodsInfoVOList.add(new GoodsInfoVO(goods, goodsService.goodsStock(goods.getId()))));
-        return ResponseEntity.ok(goodsInfoVOList);
+        return ResponseEntity.ok(new GeneralDataResponse<>(goodsInfoVOList));
     }
 }

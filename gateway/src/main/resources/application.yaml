@@ -14,5 +14,9 @@ spring:
           uri: lb://login
           predicates:
               - Path=/user/**
+        - id: order-goods
+          uri: lb://order
+          predicates:
+              - Path=/goods/**
 server:
   port: 9527

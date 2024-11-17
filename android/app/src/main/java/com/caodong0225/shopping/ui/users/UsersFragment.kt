@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.caodong0225.shopping.MainActivity
 import com.caodong0225.shopping.R
+import com.caodong0225.shopping.Settings
 import com.caodong0225.shopping.databinding.FragmentUsersBinding
 import com.caodong0225.shopping.model.UsersRequest
 import com.caodong0225.shopping.repository.UsersRepository
@@ -45,16 +47,26 @@ class UsersFragment : Fragment() {
         loginButton?.setOnClickListener {
             val username = usernameEditText?.text.toString()
             val password = passwordEditText?.text.toString()
-            println("username: $username, password: $password")
 
             CoroutineScope(Dispatchers.IO).launch {
                 val response = usersRepository.fetchJwtToken(UsersRequest(username, password))
-                println("response: $response")
                 withContext(Dispatchers.Main) {
                     val message = response?.message?.takeIf { it.isNotEmpty() } ?: "登录失败"
                     if (response?.data != null) {
                         // 登录成功
                         Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
+                        // 保存 token 到 Settings
+                        context?.let {
+                            val settings = Settings(it)
+                            settings.token = response.data
+                            settings.nickname = username
+                            val intent = Intent("com.caodong0225.UPDATE_NICKNAME")
+                            context?.sendBroadcast(intent)
+                        }
+                        // 跳转到主页面
+                        val intent = Intent(context, MainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish() // 可选：关闭当前的登录页面，防止返回
                     } else {
                         // 登录失败
                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

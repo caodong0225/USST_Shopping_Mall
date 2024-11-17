@@ -4,10 +4,17 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.caodong0225.shopping.R
+import com.caodong0225.shopping.model.UsersRegisterRequest
+import com.caodong0225.shopping.repository.UsersRepository
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterActivity : AppCompatActivity() {
+    private val usersRepository = UsersRepository()  // 实例化 AuthRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -29,12 +36,26 @@ class RegisterActivity : AppCompatActivity() {
             if (username.isBlank() || nickname.isBlank() || password.isBlank()) {
                 Toast.makeText(this, "请填写所有必填项！", Toast.LENGTH_SHORT).show()
             } else {
-                // 打印或使用输入的内容
-                Toast.makeText(
-                    this,
-                    "用户名: $username\n昵称: $nickname\n密码: $password",
-                    Toast.LENGTH_SHORT
-                ).show()
+                CoroutineScope(Dispatchers.IO).launch {
+                    val response = usersRepository.registerUser(
+                        UsersRegisterRequest(
+                            username,
+                            nickname,
+                            password
+                        )
+                    )
+                    if(response?.code == 200) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@RegisterActivity, "注册成功", Toast.LENGTH_SHORT).show()
+                            // 跳转到主页面
+                            finish()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@RegisterActivity, "注册失败", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
 
                 // 示例：可以在这里添加保存数据或跳转逻辑
                 // saveUserData(username, nickname, password)

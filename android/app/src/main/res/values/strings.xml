@@ -19,5 +19,6 @@
     <string name="register_password">密码</string>
     <string name="nickname">昵称</string>
     <string name="register_confirm">注册</string>
+    <string name="menu_logout">登出</string>
 
 </resources>

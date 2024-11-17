@@ -93,7 +93,6 @@ public class OrderController {
         Orders order = new Orders();
         order.setUserId(userInfo.getId());
         order.setAmount(totalPrice.get());
-        order.setStatus(1);
         List<OrderDetail> orderDetails = new ArrayList<>();
         createOrderDTOList.forEach(createOrderDTO -> {
             Goods goodsInfo = goodsService.getGoodsById(createOrderDTO.getGoodsId());

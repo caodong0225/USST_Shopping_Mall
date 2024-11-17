@@ -11,7 +11,7 @@
  Target Server Version : 80038 (8.0.38)
  File Encoding         : 65001
 
- Date: 17/11/2024 11:34:03
+ Date: 17/11/2024 18:33:47
 */
 
 SET NAMES utf8mb4;
@@ -55,14 +55,14 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders`  (
                            `id` int NOT NULL AUTO_INCREMENT COMMENT '主键',
                            `number` int NOT NULL COMMENT '订单号',
-                           `status` int NOT NULL COMMENT '订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消 7退款',
+                           `status` int NOT NULL DEFAULT 1 COMMENT '订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消 7退款',
                            `userid` int NOT NULL COMMENT '用户id',
                            `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '订单备注',
                            `amount` decimal(10, 2) NULL DEFAULT NULL COMMENT '收款金额',
                            `order_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '下单时间',
                            PRIMARY KEY (`id`) USING BTREE,
                            UNIQUE INDEX `orders_number_uindex`(`number` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for users

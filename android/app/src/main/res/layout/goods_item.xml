@@ -48,7 +48,7 @@
         android:layout_marginTop="8dp"
         android:textColorLink="@color/hyperLink"
         android:textIsSelectable="true"
-        app:layout_constraintEnd_toStartOf="@+id/goods_minus"
+        app:layout_constraintEnd_toStartOf="@+id/goods_num"
         app:layout_constraintStart_toEndOf="@+id/goods_image"
         app:layout_constraintTop_toBottomOf="@+id/goods_title"
         tools:text="The goods description." />
@@ -70,7 +70,7 @@
         android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/goods_add"
         app:srcCompat="@drawable/ic_minus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

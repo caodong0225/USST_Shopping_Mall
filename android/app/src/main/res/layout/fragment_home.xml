@@ -10,4 +10,44 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <!-- 总金额和支付按钮 -->
+    <LinearLayout
+        android:id="@+id/total_amount_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/total_amount_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="总金额："
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/pay_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="支付"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

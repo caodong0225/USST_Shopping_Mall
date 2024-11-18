@@ -1,15 +1,18 @@
 package com.caodong0225.shopping.ui.home
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.caodong0225.shopping.databinding.GoodsItemBinding
 import com.caodong0225.shopping.model.GoodsInfo
 import com.squareup.picasso.Picasso
 import io.noties.markwon.Markwon
 
-class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapter<GoodsAdapter.GoodsViewHolder>() {
+class GoodsAdapter(
+    private val goodsList: List<GoodsInfo>,
+    private val totalAmountView: TextView // 直接传递总金额的 TextView
+) : RecyclerView.Adapter<GoodsAdapter.GoodsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoodsViewHolder {
         val binding = GoodsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,6 +30,7 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
 
     // 用于存储用户选择的商品数量
     private val selectedGoods = mutableMapOf<Int, Int>()
+    private var goodsPrice = 0.0 // 商品总价格
 
     fun getSelectedGoods(): Map<Int, Int> = selectedGoods
 
@@ -55,6 +59,7 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
             binding.goodsAdd.setOnClickListener {
                 if (goodsNum < goods.number) {
                     goodsNum++
+                    goodsPrice += goods.goods.price
                     selectedGoods[goods.goods.id] = goodsNum
                     binding.goodsNum.text = goodsNum.toString()
                     updateGoodsNumVisibility(goodsNum)
@@ -65,6 +70,7 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
             binding.goodsMinus.setOnClickListener {
                 if (goodsNum > 0) {
                     goodsNum--
+                    goodsPrice -= goods.goods.price
                     if (goodsNum == 0) {
                         selectedGoods.remove(goods.goods.id)
                     } else {
@@ -77,6 +83,8 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
         private fun updateGoodsNumVisibility(goodsNum: Int) {
             // 如果数量为 0，隐藏数量显示；否则显示
             binding.goodsNum.text = if (goodsNum == 0) "" else goodsNum.toString()
+            // 保留两位小数
+            totalAmountView.text = String.format("%.2f", goodsPrice)
         }
     }
 

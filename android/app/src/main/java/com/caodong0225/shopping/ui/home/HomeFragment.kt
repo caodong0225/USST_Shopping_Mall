@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
         // 初始化 RecyclerView 和下拉刷新
         initRecyclerView()
         initSwipeRefresh()
+        loadGoodsData()
 
         // 设置支付按钮点击事件
         binding.payButton.setOnClickListener {
@@ -57,7 +58,7 @@ class HomeFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        goodsAdapter = GoodsAdapter(emptyList()) // 初始化为空列表
+        goodsAdapter = GoodsAdapter(emptyList(), binding.totalAmount) // 初始化为空列表
         binding.recyclerView.adapter = goodsAdapter
     }
 
@@ -72,7 +73,7 @@ class HomeFragment : Fragment() {
             val goodsList = goodsRepository.fetchGoodsList()
             if (goodsList != null) {
                 launch(Dispatchers.Main) {
-                    goodsAdapter = GoodsAdapter(goodsList)
+                    goodsAdapter = GoodsAdapter(goodsList, binding.totalAmount)
                     binding.recyclerView.adapter = goodsAdapter
                     binding.swipeRefreshLayout.isRefreshing = false // 停止刷新动画
                 }

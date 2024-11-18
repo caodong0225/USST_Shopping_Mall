@@ -5,5 +5,5 @@ data class CreateOrderRequest (
     val goodsId: Int,
 
     /** 商品数量 */
-    val goodsCount: Int
+    val number: Int
 )

@@ -7,7 +7,7 @@ internal class Settings(context: Context) {
     private val sharedPreferences: SharedPreferences
     companion object {
         // 全局静态属性
-        var defaultUrl: String = "http://10.41.133.20:9527/" // 换成本地运行的主机的IP地址
+        var defaultUrl: String = "http://101.132.24.148:9527/" // 换成本地运行的主机的IP地址
     }
     init {
         sharedPreferences = context.getSharedPreferences("shopping", Context.MODE_PRIVATE)

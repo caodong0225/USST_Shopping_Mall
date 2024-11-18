@@ -13,7 +13,6 @@ class GoodsRepository {
                 // 这里可以记录响应的信息
                 response.data
             } catch (e: Exception) {
-                println("error request: ${e.message}")
                 e.printStackTrace()
                 null
             }

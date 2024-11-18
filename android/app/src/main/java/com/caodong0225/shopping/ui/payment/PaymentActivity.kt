@@ -31,7 +31,7 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setupWebView(url: String) {
+    private fun setupWebView(content: String) {
         // 获取绑定的 WebView
         val webView: WebView = binding.webView
 
@@ -42,7 +42,19 @@ class PaymentActivity : AppCompatActivity() {
         // 设置 WebViewClient，保证加载页面时不会跳转到外部浏览器
         webView.webViewClient = WebViewClient()
 
-        // 加载支付页面 URL
-        webView.loadUrl(url)
+        // 判断是 URL 还是 HTML 代码
+        if (content.startsWith("http://") || content.startsWith("https://")) {
+            // 如果是 URL，加载 URL
+            webView.loadUrl(content)
+        } else {
+            // 如果是 HTML，加载 HTML 内容
+            webView.loadDataWithBaseURL(
+                null,
+                content,
+                "text/html",
+                "UTF-8",
+                null
+            )
+        }
     }
 }

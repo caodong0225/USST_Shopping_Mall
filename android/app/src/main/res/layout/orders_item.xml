@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="?android:colorBackground">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/orders_num"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        tools:text="总消费：0 元"
+        app:layout_constraintEnd_toStartOf="@+id/order_delete"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/orders_no"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription=""
+        tools:text="订单流水号"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/orders_num"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/orders_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        tools:srcCompat="@drawable/item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/orders_no" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/orders_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textColorLink="@color/hyperLink"
+        android:textIsSelectable="true"
+        app:layout_constraintEnd_toStartOf="@+id/order_delete"
+        app:layout_constraintStart_toEndOf="@+id/orders_image"
+        app:layout_constraintTop_toBottomOf="@+id/orders_no"
+        tools:text="The orders description." />
+
+    <ImageButton
+        android:id="@+id/order_delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/orders_num"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_delete" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

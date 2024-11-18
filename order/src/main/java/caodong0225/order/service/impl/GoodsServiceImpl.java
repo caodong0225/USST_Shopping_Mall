@@ -16,12 +16,6 @@ import java.util.List;
  */
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements IGoodsService {
-    private final IOrderDetailService orderDetailService;
-
-    public GoodsServiceImpl(IOrderDetailService orderDetailService) {
-        this.orderDetailService = orderDetailService;
-    }
-
     @Override
     public List<Goods> getAllGoods() {
         return this.lambdaQuery().list();

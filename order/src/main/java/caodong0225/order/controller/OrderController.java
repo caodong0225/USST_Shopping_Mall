@@ -126,14 +126,15 @@ public class OrderController {
     @Operation(summary = "支付订单", description = "支付订单")
     public ResponseEntity<BaseDataResponse> payOrder(
             HttpServletRequest request,
-            @RequestParam("traceNo") Long traceNo
+            @RequestParam("traceNo") String traceNo
     ) {
+        System.out.println("traceNo: " + traceNo);
         String token = request.getHeader("Authorization");
         if (token == null) {
             return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(new BaseDataResponse(403, "您还未登录"));
         }
         UserInfo userInfo = JwtUtil.parseToken(token);
-        Orders order = orderService.getOrderByTraceNo(String.valueOf(traceNo));
+        Orders order = orderService.getOrderByTraceNo(traceNo);
         if (order == null) {
             return ResponseEntity.ok(new BaseDataResponse(404, "订单不存在"));
         }

@@ -25,10 +25,16 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
         return goodsList.size
     }
 
+    // 用于存储用户选择的商品数量
+    private val selectedGoods = mutableMapOf<Int, Int>()
+
+    fun getSelectedGoods(): Map<Int, Int> = selectedGoods
+
     inner class GoodsViewHolder(private val binding: GoodsItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(goods: GoodsInfo) {
             binding.goodsTitle.text = goods.goods.name
             binding.goodsText.text = goods.goods.price.toString()
+            binding.goodsTitle.contentDescription = goods.goods.id.toString()
             val description = "**单价**: ${goods.goods.price} 元  \n**剩余**：${goods.number}  \n**已售**：${goods.sold}"
             // 使用 Markwon 渲染 Markdown 格式的文本
             val markwon = Markwon.create(binding.root.context)
@@ -49,6 +55,7 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
             binding.goodsAdd.setOnClickListener {
                 if (goodsNum < goods.number) {
                     goodsNum++
+                    selectedGoods[goods.goods.id] = goodsNum
                     binding.goodsNum.text = goodsNum.toString()
                     updateGoodsNumVisibility(goodsNum)
                 }
@@ -58,7 +65,11 @@ class GoodsAdapter(private val goodsList: List<GoodsInfo>) : RecyclerView.Adapte
             binding.goodsMinus.setOnClickListener {
                 if (goodsNum > 0) {
                     goodsNum--
-                    binding.goodsNum.text = goodsNum.toString()
+                    if (goodsNum == 0) {
+                        selectedGoods.remove(goods.goods.id)
+                    } else {
+                        selectedGoods[goods.goods.id] = goodsNum
+                    }
                     updateGoodsNumVisibility(goodsNum)
                 }
             }

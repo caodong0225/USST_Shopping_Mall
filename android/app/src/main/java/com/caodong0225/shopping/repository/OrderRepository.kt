@@ -1,19 +1,19 @@
 package com.caodong0225.shopping.repository
 
 import com.caodong0225.shopping.client.RetrofitClient
-import com.caodong0225.shopping.model.GoodsInfo
+import com.caodong0225.shopping.model.ApiResponse
+import com.caodong0225.shopping.model.CreateOrderRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class GoodsRepository {
-    suspend fun fetchGoodsList(): List<GoodsInfo>? {
+class OrderRepository {
+    suspend fun createOrder(token: String, orderInfo: List<CreateOrderRequest>): ApiResponse<String>? {
         return withContext(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.goodsService.getGoodsList()
+                val response = RetrofitClient.orderService.createOrder(token, orderInfo)
                 // 这里可以记录响应的信息
-                response.data
+                response
             } catch (e: Exception) {
-                println("error request: ${e.message}")
                 e.printStackTrace()
                 null
             }

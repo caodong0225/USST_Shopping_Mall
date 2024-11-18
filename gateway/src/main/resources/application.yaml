@@ -22,5 +22,9 @@ spring:
           uri: lb://order
           predicates:
             - Path=/order/**
+        - id: alipay
+          uri: lb://alipay
+          predicates:
+            - Path=/alipay/**
 server:
   port: 9527

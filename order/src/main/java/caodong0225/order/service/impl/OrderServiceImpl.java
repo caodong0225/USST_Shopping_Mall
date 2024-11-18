@@ -52,4 +52,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         }
         return true;
     }
+
+    @Override
+    public Long countTotalOrders() {
+        return this.count();
+    }
+
+    @Override
+    public Orders getOrderByTraceNo(String traceId) {
+        return this.lambdaQuery().eq(Orders::getNumber, traceId).one();
+    }
 }

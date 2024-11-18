@@ -6,7 +6,6 @@ import caodong0225.common.entity.OrderDetail;
 import caodong0225.common.entity.Orders;
 import caodong0225.common.entity.UserInfo;
 import caodong0225.common.response.BaseDataResponse;
-import caodong0225.common.response.BaseResponse;
 import caodong0225.common.response.GeneralDataResponse;
 import caodong0225.common.util.JwtUtil;
 import caodong0225.common.vo.GoodsOrderedVO;
@@ -15,12 +14,13 @@ import caodong0225.order.service.IGoodsService;
 import caodong0225.order.service.IOrderDetailService;
 import caodong0225.order.service.IOrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +32,21 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @RestController
 @RequestMapping("/order")
-@RequiredArgsConstructor
 public class OrderController {
     private final IOrderService orderService;
     private final IGoodsService goodsService;
     private final IOrderDetailService orderDetailService;
+
+    public static final String PAYMENT_URL = "http://localhost:8082/alipay/pay";
+
+    @Resource
+    private RestTemplate restTemplate;
+
+    public OrderController(IOrderService orderService, IGoodsService goodsService, IOrderDetailService orderDetailService) {
+        this.orderService = orderService;
+        this.goodsService = goodsService;
+        this.orderDetailService = orderDetailService;
+    }
 
     @GetMapping("/list")
     @Operation(summary = "获取订单列表", description = "获取当前用户所有下单的列表")
@@ -75,7 +85,7 @@ public class OrderController {
 
     @PostMapping("/create")
     @Operation(summary = "创建订单", description = "创建一个新的订单")
-    public ResponseEntity<BaseResponse> createOrder(
+    public ResponseEntity<BaseDataResponse> createOrder(
             HttpServletRequest request,
             @Valid @RequestBody List<CreateOrderDTO> createOrderDTOList
     ) {
@@ -83,16 +93,18 @@ public class OrderController {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(new BaseDataResponse(403, "您还未登录"));
         }
-        // TODO: 获取订单流水号
         UserInfo userInfo = JwtUtil.parseToken(token);
         AtomicReference<Double> totalPrice = new AtomicReference<>(0.0);
         createOrderDTOList.forEach(createOrderDTO -> {
             Goods goodsInfo = goodsService.getGoodsById(createOrderDTO.getGoodsId());
             totalPrice.updateAndGet(v -> v + goodsInfo.getPrice() * createOrderDTO.getNumber());
         });
+        Long traceNo = orderService.countTotalOrders() + 1;
+        String response = restTemplate.getForObject(PAYMENT_URL + "?subject=caodong0225&traceNo="+traceNo+"&totalAmount="+ totalPrice, String.class);
         Orders order = new Orders();
         order.setUserId(userInfo.getId());
         order.setAmount(totalPrice.get());
+        order.setNumber(String.valueOf(traceNo));
         List<OrderDetail> orderDetails = new ArrayList<>();
         createOrderDTOList.forEach(createOrderDTO -> {
             Goods goodsInfo = goodsService.getGoodsById(createOrderDTO.getGoodsId());
@@ -104,9 +116,35 @@ public class OrderController {
             orderDetails.add(orderDetail);
         });
         if (orderService.createOrderWithDetails(order, orderDetails)) {
-            return ResponseEntity.ok(new BaseResponse());
+            return ResponseEntity.ok(new BaseDataResponse(response));
         } else {
             return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body(new BaseDataResponse(500, "创建订单失败"));
         }
+    }
+
+    @GetMapping("/pay")
+    @Operation(summary = "支付订单", description = "支付订单")
+    public ResponseEntity<BaseDataResponse> payOrder(
+            HttpServletRequest request,
+            @RequestParam("traceNo") Long traceNo
+    ) {
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.SC_FORBIDDEN).body(new BaseDataResponse(403, "您还未登录"));
+        }
+        UserInfo userInfo = JwtUtil.parseToken(token);
+        Orders order = orderService.getOrderByTraceNo(String.valueOf(traceNo));
+        if (order == null) {
+            return ResponseEntity.ok(new BaseDataResponse(404, "订单不存在"));
+        }
+        if(!userInfo.getId().equals(order.getUserId()))
+        {
+            return ResponseEntity.ok(new BaseDataResponse(403, "您无权支付该订单"));
+        }
+        if(order.getStatus() != 1) {
+            return ResponseEntity.ok(new BaseDataResponse(400, "订单已过期或被取消"));
+        }
+        String response = restTemplate.getForObject(PAYMENT_URL + "?subject=caodong0225&traceNo="+traceNo+"&totalAmount="+ order.getAmount(), String.class);
+        return ResponseEntity.ok(new BaseDataResponse(response));
     }
 }

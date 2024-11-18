@@ -19,6 +19,7 @@
         <module>login</module>
         <module>common</module>
         <module>gateway</module>
+        <module>alipay</module>
     </modules>
     <properties>
         <java.version>17</java.version>

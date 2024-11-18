@@ -18,5 +18,9 @@ spring:
           uri: lb://order
           predicates:
               - Path=/goods/**
+        - id: order-order
+          uri: lb://order
+          predicates:
+            - Path=/order/**
 server:
   port: 9527

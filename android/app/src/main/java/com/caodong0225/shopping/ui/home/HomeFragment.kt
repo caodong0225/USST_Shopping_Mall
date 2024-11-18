@@ -1,5 +1,6 @@
 package com.caodong0225.shopping.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.caodong0225.shopping.databinding.FragmentHomeBinding
 import com.caodong0225.shopping.model.CreateOrderRequest
 import com.caodong0225.shopping.repository.GoodsRepository
 import com.caodong0225.shopping.repository.OrderRepository
+import com.caodong0225.shopping.ui.payment.PaymentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -103,7 +105,21 @@ class HomeFragment : Fragment() {
         }
         CoroutineScope(Dispatchers.IO).launch {
             val response = orderRepository.createOrder(token, orderRequests)
-            Toast.makeText(context, response?.message, Toast.LENGTH_SHORT).show()
+            // 创建支付请求成功后跳转到支付页面
+            launch(Dispatchers.Main) {
+                if (response?.code == 200) {
+                    // 假设支付页面需要 URL 和其他信息
+                    val paymentUrl = response.data // 从响应中获取支付 URL
+
+                    // 使用 Intent 跳转到支付页面
+                    val intent = Intent(context, PaymentActivity::class.java).apply {
+                        putExtra("PAYMENT_URL", paymentUrl) // 将支付 URL 传递给支付页面
+                    }
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(context, response?.message ?: "创建订单失败", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

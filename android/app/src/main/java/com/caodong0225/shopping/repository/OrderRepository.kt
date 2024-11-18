@@ -33,4 +33,17 @@ class OrderRepository {
             }
         }
     }
+
+    suspend fun payOrder(token: String, orderId: String): ApiResponse<String>? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.orderService.payOrder(token, orderId)
+                // 这里可以记录响应的信息
+                response
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
 }

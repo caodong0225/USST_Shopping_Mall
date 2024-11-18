@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface OrderService {
     @POST("order/create")
@@ -19,4 +20,10 @@ interface OrderService {
     suspend fun getOrderList(
         @Header("Authorization") token: String
     ): ApiResponse<List<OrderInfo>>
+
+    @GET("order/pay")
+    suspend fun payOrder(
+        @Header("Authorization") token: String,
+        @Query("traceNo") traceNo: String
+    ): ApiResponse<String>
 }

@@ -13,8 +13,13 @@ import io.noties.markwon.Markwon
 import java.time.format.DateTimeFormatter
 
 class OrdersAdapter(
-    private var ordersList: List<OrderInfo>
+    private var ordersList: List<OrderInfo>,
+    private val orderClickListener: OnOrderClickListener
 ) : RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder>() {
+
+    interface OnOrderClickListener {
+        fun onOrderClick(order: OrderInfo)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val binding = OrdersItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -41,28 +46,20 @@ class OrdersAdapter(
         @RequiresApi(Build.VERSION_CODES.O)
         @SuppressLint("SetTextI18n")
         fun bind(order: OrderInfo) {
+            // 设置点击事件
+            binding.root.setOnClickListener {
+                orderClickListener.onOrderClick(order)
+            }
             val orderTitle = StringBuilder()
             orderTitle.append("订单号：${order.orderNo}  ")
-            if(order.status == 1) {
-                orderTitle.append("（待付款）")
-            }
-            if(order.status == 2) {
-                orderTitle.append("（待接单）")
-            }
-            if(order.status == 3) {
-                orderTitle.append("（已接单）")
-            }
-            if(order.status == 4) {
-                orderTitle.append("（派送中）")
-            }
-            if(order.status == 5) {
-                orderTitle.append("（已完成）")
-            }
-            if(order.status == 6) {
-                orderTitle.append("（已取消）")
-            }
-            if(order.status == 7) {
-                orderTitle.append("（已退款）")
+            when (order.status) {
+                1 -> orderTitle.append("（点我付款）")
+                2 -> orderTitle.append("（待接单）")
+                3 -> orderTitle.append("（已接单）")
+                4 -> orderTitle.append("（派送中）")
+                5 -> orderTitle.append("（已完成）")
+                6 -> orderTitle.append("（已取消）")
+                7 -> orderTitle.append("（已退款）")
             }
             // 绑定订单流水号
             binding.ordersNo.text = orderTitle.toString()

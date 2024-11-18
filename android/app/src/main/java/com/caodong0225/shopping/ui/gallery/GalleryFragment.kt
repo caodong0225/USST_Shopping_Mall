@@ -1,5 +1,6 @@
 package com.caodong0225.shopping.ui.gallery
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.caodong0225.shopping.Settings
 import com.caodong0225.shopping.databinding.FragmentGalleryBinding
+import com.caodong0225.shopping.model.OrderInfo
 import com.caodong0225.shopping.repository.OrderRepository
+import com.caodong0225.shopping.ui.payment.PaymentActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(), OrdersAdapter.OnOrderClickListener {
 
     private var _binding: FragmentGalleryBinding? = null
     private lateinit var ordersAdapter: OrdersAdapter
@@ -48,7 +51,7 @@ class GalleryFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        ordersAdapter = OrdersAdapter(emptyList())
+        ordersAdapter = OrdersAdapter(emptyList(), this)
         binding.recyclerView.adapter = ordersAdapter
     }
 
@@ -82,5 +85,26 @@ class GalleryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onOrderClick(order: OrderInfo) {
+        if(order.status == 1)
+        {
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = orderRepository.payOrder(settings.token!!, order.orderNo)
+                if (response != null) {
+                    if (response.code == 200) {
+                        // 假设支付页面需要 URL 和其他信息
+                        val paymentUrl = response.data // 从响应中获取支付 URL
+
+                        // 使用 Intent 跳转到支付页面
+                        val intent = Intent(context, PaymentActivity::class.java).apply {
+                            putExtra("PAYMENT_URL", paymentUrl) // 将支付 URL 传递给支付页面
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }
+        }
     }
 }

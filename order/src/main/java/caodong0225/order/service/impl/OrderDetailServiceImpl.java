@@ -23,4 +23,10 @@ public class OrderDetailServiceImpl extends ServiceImpl<OrderDetailMapper, Order
     public boolean insertOrderDetail(OrderDetail orderDetail) {
         return this.save(orderDetail);
     }
+
+    @Override
+    public Integer goodsSold(Integer goodsId) {
+        Integer goodsSold = baseMapper.goodsSold(goodsId);
+        return goodsSold != null ? goodsSold : 0;
+    }
 }

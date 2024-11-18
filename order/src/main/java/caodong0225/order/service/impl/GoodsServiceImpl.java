@@ -28,13 +28,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
-    public Integer goodsStock(Integer goodsId) {
-        return Math.toIntExact(orderDetailService.lambdaQuery()
-                .eq(OrderDetail::getGoodsId, goodsId)
-                .count());
-    }
-
-    @Override
     public Goods getGoodsById(Integer goodsId) {
         return this.getById(goodsId);
     }

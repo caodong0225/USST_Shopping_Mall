@@ -12,4 +12,5 @@ import java.util.List;
 public interface IOrderDetailService extends IService<OrderDetail> {
     List<OrderDetail> getOrderDetailByOrderId(Integer orderId);
     boolean insertOrderDetail(OrderDetail orderDetail);
+    Integer goodsSold(Integer goodsId);
 }

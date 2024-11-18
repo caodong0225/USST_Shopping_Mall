@@ -33,7 +33,7 @@ public class GoodsController {
     public ResponseEntity<GeneralDataResponse<List<GoodsInfoVO>>> getGoodsList() {
         List<Goods> allGoods = goodsService.getAllGoods();
         List<GoodsInfoVO> goodsInfoVOList = new ArrayList<>();
-        allGoods.forEach(goods -> goodsInfoVOList.add(new GoodsInfoVO(goods, goodsService.goodsStock(goods.getId()))));
+        allGoods.forEach(goods -> goodsInfoVOList.add(new GoodsInfoVO(goods, orderDetailService.goodsSold(goods.getId()))));
         return ResponseEntity.ok(new GeneralDataResponse<>(goodsInfoVOList));
     }
 }

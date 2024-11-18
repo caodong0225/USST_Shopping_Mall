@@ -43,20 +43,9 @@ class HomeFragment : Fragment() {
         // 初始化 Settings
         settings = Settings(requireContext())
 
-        // 确保在数据加载完成后再初始化 RecyclerView
-        CoroutineScope(Dispatchers.IO).launch {
-            val goodsList = goodsRepository.fetchGoodsList()
-            if (goodsList != null) {
-                // 确保在主线程更新 UI
-                launch(Dispatchers.Main) {
-                    goodsAdapter = GoodsAdapter(goodsList)
-                    binding.recyclerView.apply {
-                        layoutManager = LinearLayoutManager(context)
-                        adapter = goodsAdapter
-                    }
-                }
-            }
-        }
+        // 初始化 RecyclerView 和下拉刷新
+        initRecyclerView()
+        initSwipeRefresh()
 
         // 设置支付按钮点击事件
         binding.payButton.setOnClickListener {
@@ -64,6 +53,36 @@ class HomeFragment : Fragment() {
         }
 
         return root
+    }
+
+    private fun initRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        goodsAdapter = GoodsAdapter(emptyList()) // 初始化为空列表
+        binding.recyclerView.adapter = goodsAdapter
+    }
+
+    private fun initSwipeRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            loadGoodsData() // 调用重新加载数据的逻辑
+        }
+    }
+
+    private fun loadGoodsData() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val goodsList = goodsRepository.fetchGoodsList()
+            if (goodsList != null) {
+                launch(Dispatchers.Main) {
+                    goodsAdapter = GoodsAdapter(goodsList)
+                    binding.recyclerView.adapter = goodsAdapter
+                    binding.swipeRefreshLayout.isRefreshing = false // 停止刷新动画
+                }
+            } else {
+                launch(Dispatchers.Main) {
+                    Toast.makeText(context, "加载失败", Toast.LENGTH_SHORT).show()
+                    binding.swipeRefreshLayout.isRefreshing = false // 停止刷新动画
+                }
+            }
+        }
     }
 
     private fun createOrder() {

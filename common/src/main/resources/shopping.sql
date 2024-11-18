@@ -56,7 +56,7 @@ CREATE TABLE `orders`  (
                            `id` int NOT NULL AUTO_INCREMENT COMMENT '主键',
                            `number` int NOT NULL COMMENT '订单号',
                            `status` int NOT NULL DEFAULT 1 COMMENT '订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消 7退款',
-                           `userid` int NOT NULL COMMENT '用户id',
+                           `user_id` int NOT NULL COMMENT '用户id',
                            `comment` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '订单备注',
                            `amount` decimal(10, 2) NULL DEFAULT NULL COMMENT '收款金额',
                            `order_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '下单时间',

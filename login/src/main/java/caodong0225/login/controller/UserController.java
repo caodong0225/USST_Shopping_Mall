@@ -60,7 +60,7 @@ public class UserController {
         String password = user.getPassword();
         Users loginUser = userService.login(username,password);
         if (loginUser == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseDataResponse(404, "用户名或密码错误"));
+            return ResponseEntity.ok(new BaseDataResponse(404, "用户名或密码错误"));
         }
         String token = JwtUtil.createToken(loginUser);
         return ResponseEntity.ok(new BaseDataResponse(token));
